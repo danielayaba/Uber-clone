@@ -1,0 +1,91 @@
+### UBER CLONE MVP - API TESTS
+# You can use these tests with the "REST Client" extension in VSCode
+# or copy the endpoints into Postman.
+
+@baseUrl = http://localhost:3000
+# ⚠️ Remarque pour les appareils mobiles (React Native / Expo) :
+# Si vous testez depuis un téléphone physique ou un émulateur, 
+# remplacez 'localhost' par l'adresse IP locale de votre ordinateur (ex: http://192.168.1.45:3000)
+### 1. Register a new user
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "rider1@example.com",
+  "password": "securepassword123",
+  "role": "rider"
+}
+
+###
+
+### 2. Login User
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "rider1@example.com",
+  "password": "securepassword123"
+}
+
+###
+
+### 3. Request a Ride (Trips API)
+POST {{baseUrl}}/trips/request
+Content-Type: application/json
+
+{
+  "riderId": "rider123",
+  "pickupLat": 37.7749,
+  "pickupLng": -122.4194,
+  "dropLat": 37.7858,
+  "dropLng": -122.4064
+}
+
+###
+
+### 4. Accept a Ride (Driver)
+POST {{baseUrl}}/trips/trip456/accept
+Content-Type: application/json
+
+{
+  "driverId": "driver789"
+}
+
+###
+
+### 5. Verify Ride Code
+POST {{baseUrl}}/trips/trip456/verify
+Content-Type: application/json
+
+{
+  "code": "123456"
+}
+
+###
+
+### 6. Complete Ride
+POST {{baseUrl}}/trips/trip456/complete
+Content-Type: application/json
+
+{}
+
+###
+
+### 7. Get Saved Places
+GET {{baseUrl}}/users/user123/saved-places
+Content-Type: application/json
+
+###
+
+### 8. Add Saved Place
+POST {{baseUrl}}/users/user123/saved-places
+Content-Type: application/json
+
+{
+  "name": "Home",
+  "address": "123 Main St",
+  "latitude": 37.7749,
+  "longitude": -122.4194
+}
+
+###
