@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, OneToOne } from 'typeorm';
 import { SavedPlace } from './saved-place.entity';
+import { Driver } from '../drivers/driver.entity';
 
 @Entity('users')
 export class User {
@@ -32,4 +33,7 @@ export class User {
 
   @OneToMany(() => SavedPlace, (savedPlace) => savedPlace.user)
   savedPlaces: SavedPlace[];
+
+  @OneToOne(() => Driver, (driver) => driver.user)
+  driver: Driver;
 }

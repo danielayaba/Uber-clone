@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { SavedPlace } from './saved-place.entity';
+import { Driver } from '../drivers/driver.entity';
 
 @Injectable()
 export class UsersService {
@@ -11,6 +12,8 @@ export class UsersService {
     private userRepository: Repository<User>,
     @InjectRepository(SavedPlace)
     private savedPlaceRepository: Repository<SavedPlace>,
+    @InjectRepository(Driver)
+    private driverRepository: Repository<Driver>,
   ) {}
 
   async findByEmail(email: string): Promise<User | undefined> {
@@ -23,7 +26,14 @@ export class UsersService {
       throw new ConflictException("L'adresse email est deja utilisee.");
     }
     const newUser = this.userRepository.create(userDto as User);
-    return this.userRepository.save(newUser);
+    const savedUser = await this.userRepository.save(newUser);
+
+    if (savedUser.role === 'driver') {
+      const driver = this.driverRepository.create({ user: savedUser });
+      await this.driverRepository.save(driver);
+    }
+
+    return savedUser;
   }
 
   async getSavedPlaces(userId: string): Promise<SavedPlace[]> {
