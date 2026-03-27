@@ -4,11 +4,12 @@ import { DriversController } from './drivers.controller';
 import { UsersModule } from '../users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Driver } from './driver.entity';
+import { DriverAvailability } from './driver-availability.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Driver]),
-    UsersModule, // Needed for updateOnlineStatus logic
+    TypeOrmModule.forFeature([Driver, DriverAvailability]),
+    UsersModule,
   ],
   controllers: [DriversController],
   providers: [DriversService],

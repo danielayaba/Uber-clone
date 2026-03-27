@@ -19,8 +19,8 @@ export class Driver {
   @Column({ type: 'decimal', precision: 3, scale: 2, default: 5.0 })
   rating: number;
 
-  @Column({ name: 'is_available', default: false })
-  isAvailable: boolean;
+  @Column({ type: 'varchar', length: 20, default: 'offline' })
+  status: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
