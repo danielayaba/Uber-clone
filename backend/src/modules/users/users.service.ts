@@ -38,4 +38,13 @@ export class UsersService {
     const newPlace = this.savedPlaceRepository.create({ ...placeData, user });
     return this.savedPlaceRepository.save(newPlace);
   }
+
+  async updateOnlineStatus(userId: string, isOnline: boolean): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException('Utilisateur introuvable');
+    }
+    user.isOnline = isOnline;
+    return this.userRepository.save(user);
+  }
 }

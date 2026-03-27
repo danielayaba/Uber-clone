@@ -24,8 +24,8 @@ export class User {
   @Column({ type: 'text', name: 'profile_photo', nullable: true })
   profilePhoto: string;
 
-  @Column({ name: 'is_verified', default: false })
-  isVerified: boolean;
+  @Column({ name: 'is_online', default: false })
+  isOnline: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
