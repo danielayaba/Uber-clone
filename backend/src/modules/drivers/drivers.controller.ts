@@ -12,9 +12,13 @@ export class DriversController {
 
   @Post('status')
   async toggleStatus(@Body() body: { isOnline: boolean }, @Request() req: any) {
-    // Note: Assuming auth guard is applied and attaches user to request
-    // For now, using a hardcoded or provided ID if auth not fully setup
     const driverId = body['driverId'] || req.user?.id; 
     return this.driversService.updateStatus(driverId, body.isOnline);
+  }
+
+  @Post('location')
+  async updateLocation(@Body() body: any, @Request() req: any) {
+    const driverId = body['driverId'] || req.user?.id;
+    return this.driversService.updateLocation(driverId, body);
   }
 }

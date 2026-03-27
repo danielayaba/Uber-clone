@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import { Driver } from './driver.entity';
 import { DriverAvailability } from './driver-availability.entity';
+import { DriverLocation } from './driver-location.entity';
+import { DriverLocationHistory } from './driver-location-history.entity';
 
 @Injectable()
 export class DriversService {
@@ -12,6 +14,10 @@ export class DriversService {
     private driverRepository: Repository<Driver>,
     @InjectRepository(DriverAvailability)
     private availabilityRepository: Repository<DriverAvailability>,
+    @InjectRepository(DriverLocation)
+    private locationRepository: Repository<DriverLocation>,
+    @InjectRepository(DriverLocationHistory)
+    private historyRepository: Repository<DriverLocationHistory>,
     private usersService: UsersService,
   ) {}
 
@@ -51,5 +57,38 @@ export class DriversService {
     await this.usersService.updateOnlineStatus(userId, isAvailable);
 
     return { status: driver.status, isAvailable };
+  }
+
+  async updateLocation(userId: string, data: any) {
+    const driver = await this.getDriverDetails(userId);
+
+    // 1. Update Latest Location
+    let location = await this.locationRepository.findOne({
+      where: { driverId: driver.id }
+    });
+
+    if (!location) {
+      location = this.locationRepository.create({
+        driverId: driver.id,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        heading: data.heading,
+        speed: data.speed,
+        accuracy: data.accuracy,
+      } as Partial<DriverLocation>);
+    } else {
+      Object.assign(location, data);
+    }
+    await this.locationRepository.save(location);
+
+    // 2. Add to History
+    await this.historyRepository.insert({
+      driverId: driver.id,
+      latitude: data.latitude,
+      longitude: data.longitude,
+      heading: data.heading,
+    });
+
+    return { success: true };
   }
 }
